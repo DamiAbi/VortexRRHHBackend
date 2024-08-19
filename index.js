@@ -4,6 +4,7 @@ import morgan from "morgan";
 import path from "path";
 import "dotenv/config";
 import "./src/database/dbConnection";
+import usersRouter from "./src/routes/userRoute"
 
 //PORT
 
@@ -22,3 +23,4 @@ app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "/public")));
 
 //ROUTES
+app.use("/vortex-rrhh", usersRouter);
