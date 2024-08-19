@@ -1,23 +1,23 @@
-import jwt from "jsonwebtoken";
-
 const validateJWT = (req, res, next) => {
   const token = req.header("x-token");
   if (!token) {
-    return res.status(401).json({
-      message: "No token found.",
-    });
+    return res.status(401).json({ message: "No token found." });
   }
 
   try {
     const payload = jwt.verify(token, process.env.SECRET_JWT);
-    req.username = payload.username;
+    req.user = payload; // Cambiado de req.username a req.user para acceder al rol del usuario
   } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      message: "Invalid token",
-    });
+    return res.status(401).json({ message: "Invalid token" });
   }
   next();
 };
 
-export default validateJWT;
+const adminOnly = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: "Access denied. Admins only." });
+  }
+  next();
+};
+
+export { validateJWT, adminOnly };
